@@ -9,11 +9,14 @@ public class LineManagerScr : MonoBehaviour
 
     [Header("First Move Vars")]
     List<Vector3> lineInitialPoses = new List<Vector3>();
-    List<Vector3> firstMoveTargetPoses = new List<Vector3>();
+    List<Vector3> lineTargetPoses = new List<Vector3>();
     float firstLineDistance = 11.5f;
-    bool firstLineMove = false;
+    bool lineMove = false;
     float startTime;
     [SerializeField] float firstLineMoveDuration = 5f;
+    [SerializeField] float lineContinueDuration = 3f;
+    [SerializeField] float lineContinueDistance = 2f;
+    bool lineContinue = false;
 
     [Header("Leave the Line vars")]
     Vector3 lineHeadPos;
@@ -32,17 +35,18 @@ public class LineManagerScr : MonoBehaviour
     {
         MoveTheLine(firstLineMoveDuration);
         LeaveTheLine();
+        ContinueTheLine();
     }
 
     void MoveTheLine(float t)
     {
-        if(firstLineMove)
+        if(lineMove)
         {
             float moveAm = (Time.time-startTime)/t;
 
             for(int i = 0 ; i <customerList.Count; i++)
             {
-                customerList[i].transform.position = Vector3.Lerp(lineInitialPoses[i],firstMoveTargetPoses[i],moveAm);
+                customerList[i].transform.position = Vector3.Lerp(lineInitialPoses[i],lineTargetPoses[i],moveAm);
             }
         }
     }
@@ -52,30 +56,44 @@ public class LineManagerScr : MonoBehaviour
         foreach (GameObject x in customerList)
         {
             lineInitialPoses.Add(x.transform.position);
-            firstMoveTargetPoses.Add(x.transform.position + x.transform.right*firstLineDistance);
+            lineTargetPoses.Add(x.transform.position + x.transform.right*firstLineDistance);
         }
         
         startTime = Time.time;
-        firstLineMove = true;
+        lineMove = true;
 
         Invoke("firstLineStop",firstLineMoveDuration);     
     }
 
     void LeaveTheLine()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space)) //This simulates the order being compeleted for now
         {
             customerList[0].GetComponentInChildren<Canvas>().enabled = false;
             lineHeadPos = customerList[0].transform.position;
             lineHeadDes = lineHeadPos + (customerList[0].transform.right * lineLeaveDistance);
             lineLeaveStartTime = Time.time;
             goLeaveLine = true;
+
+            lineInitialPoses.Clear();
+            lineTargetPoses.Clear();
+
+            for (int i = 1; i < customerList.Count ; i ++)
+            {
+                lineInitialPoses.Add(customerList[i].transform.position);
+                lineTargetPoses.Add(customerList[i].transform.position + customerList[i].transform.right*lineContinueDistance);
+            }
+
+            startTime = Time.time;
+            lineContinue = true;
+
+            Invoke("firstLineStop",firstLineMoveDuration);
+            Invoke("lineContinueStop",lineContinueDuration);
         }
 
         if (goLeaveLine)
         {
             float leaveAm = (Time.time - lineLeaveStartTime)/lineLeaveDuration;
-
             customerList[0].transform.position = Vector3.Lerp(lineHeadPos,lineHeadDes,leaveAm);            
         }
     }
@@ -95,6 +113,24 @@ public class LineManagerScr : MonoBehaviour
 
     void firstLineStop()
     {
-        firstLineMove = false;
+        lineMove = false;
+    }
+
+    void ContinueTheLine()
+    {
+        if(lineContinue)
+        {
+            float moveAm = (Time.time-startTime)/lineContinueDuration;
+
+            for(int i = 0 ; i <customerList.Count-1; i++)
+            {
+                customerList[i+1].transform.position = Vector3.Lerp(lineInitialPoses[i],lineTargetPoses[i],moveAm);
+            }
+        }        
+    }
+
+    void lineContinueStop()
+    {
+        lineContinue = false;
     }
 }
