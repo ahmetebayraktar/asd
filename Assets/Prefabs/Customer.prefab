@@ -245,7 +245,7 @@ Transform:
   m_Children:
   - {fileID: 8129530152017982415}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7759401120181298407
 MonoBehaviour:
@@ -265,6 +265,10 @@ MonoBehaviour:
   - {fileID: -7793849681536444728, guid: 9a1e00e3095c8f045b7e67947f1caec9, type: 3}
   - {fileID: -4628437188151972654, guid: a30396e213555244c9dfbc9ff161f182, type: 3}
   - {fileID: 393367174444774568, guid: ea111190298d4b24c90da17e3b235a69, type: 3}
+  - {fileID: 3303170224487381519, guid: 32bcf13c91480cc41882428e18c3c6e6, type: 3}
+  - {fileID: -5640272819790817360, guid: adc99ae5b7fc33240a18e3106168d1d8, type: 3}
+  - {fileID: 4052005452347938977, guid: 78daa00237ddc8d4dbfda7b9eca35520, type: 3}
+  - {fileID: -3268050810200010581, guid: d9fe4f5a07cf4914d9f7404049d1b727, type: 3}
 --- !u!212 &294401698823658270
 SpriteRenderer:
   m_ObjectHideFlags: 0
